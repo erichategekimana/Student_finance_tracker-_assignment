@@ -19,6 +19,14 @@ const SEED = [
 // alert("JS is working!");
 
 
+const menuToggle = document.getElementById('menuToggle');
+const menu = document.querySelector('.menu');
+
+menuToggle.addEventListener('click', () => {
+  menu.classList.toggle('show');
+});
+
+
 // validators
 const patterns = {
   description: /^\S(?:.*\S)?$/,
