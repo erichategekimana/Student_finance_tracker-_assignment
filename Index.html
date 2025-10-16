@@ -4,703 +4,171 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Student Finance Tracker</title>
-  <meta name="description" content="Student Finance Tracker - responsive, accessible, vanilla HTML/CSS/JS app with regex search and localStorage."/>
-
-
-
-
-
-
-
-
-  <style>
-
-
-
-
-
-
-    /*from gpt...
-    body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background-color: #0f172a;
-  color: #e2e8f0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Center main content */
-main {
-  flex: 1;
-  width: 90%;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-/* Responsive breakpoints */
-@media (max-width: 1024px) {
-  main {
-    max-width: 800px;
-  }
-}
-
-@media (max-width: 768px) {
-  main {
-    max-width: 90%;
-    padding: 0.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  main {
-    width: 95%;
-    padding: 0.3rem;
-  }
-
-  .card, .dashboard-section {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-    /* ---------- base.css (mobile-first) ---------- */
-    :root{
-      --bg:#0f1724; --card:#0b1220; --muted:#94a3b8; --accent:#60a5fa; --success:#10b981; --danger:#ef4444; --glass: rgba(255,255,255,0.02);
-      --focus: 3px solid rgba(96,165,250,0.25);
-      --radius:12px; --gap:12px; --max-w:1100px;
-      --contrast-bg:#ffffff; --text:#e6eef8;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background:linear-gradient(180deg,#071826 0%, #081426 100%); color:var(--text); -webkit-font-smoothing:antialiased; line-height:1.35}
-    a{color:var(--accent)}
-    .container{max-width:var(--max-w); margin:18px auto; padding:18px}
-
-    /* skip link */
-    .skip{position:absolute;left:10px;top:10px;background:#fff;color:#000;padding:8px 12px;border-radius:6px;transform:translateY(-120%);transition:transform .15s}
-    .skip:focus{transform:none}
-
-    header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-    .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700}
-    header h1{font-size:1.15rem;margin:0}
-    header p{margin:0;color:var(--muted);font-size:.9rem}
-
-    nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-    nav button{background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:var(--text);padding:8px 10px;border-radius:8px;cursor:pointer}
-    nav button[aria-current="true"]{box-shadow:0 6px 18px rgba(2,6,23,0.6);outline:var(--focus)}
-
-    main {display:grid;grid-template-columns:1fr;gap:16px}
-    .top {display:flex;flex-direction:column;gap:12px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:var(--radius); padding:12px; box-shadow: 0 6px 18px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.03)}
-
-    /* Add form layout */
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}
-    input[type=text], input[type=number], input[type=date], select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)}
-    .row{display:flex;gap:8px;align-items:end}
-    .btn{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#072034;cursor:pointer}
-    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)}
-
-    /* Table & cards */
-    table{width:100%;border-collapse:collapse;font-size:.95rem}
-    th,td{padding:10px;border-bottom:1px dashed rgba(255,255,255,0.03);text-align:left}
-    th{position:relative;cursor:pointer}
-    th .sort{font-size:.75rem;color:var(--muted);margin-left:6px}
-
-    /* mobile cards */
-    .card-list{display:grid;gap:10px}
-    .txn-card{padding:10px;border-radius:10px;background:linear-gradient(180deg,#071a2b, #06131c);display:flex;justify-content:space-between;align-items:flex-start}
-    .txn-left{display:flex;flex-direction:column;gap:6px}
-    .txn-meta{color:var(--muted);font-size:.85rem}
-
-    /* stats */
-    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-    .stat{padding:10px;border-radius:8px}
-    .chart{display:flex;gap:6px;align-items:end;height:80px}
-    .chart .bar{flex:1;border-radius:6px}
-
-    /* settings */
-    .settings-grid{display:grid;grid-template-columns:1fr;gap:8px}
-
-    /* focus styles */
-    :focus{outline:none}
-    button:focus, input:focus, select:focus, a:focus{box-shadow:var(--focus);border-radius:8px}
-
-    /* responsive */
-    @media (min-width: 768px){
-      main{grid-template-columns: 1fr 360px}
-      .top{flex-direction:row;align-items:center;justify-content:space-between}
-      .form-grid{grid-template-columns:1fr 1fr}
-      .stats-grid{grid-template-columns:1fr}
-    }
-    @media (min-width: 1024px){
-      .stats-grid{grid-template-columns:repeat(2,1fr)}
-      .form-grid{grid-template-columns:1fr 1fr}
-    }
-
-    /* utility */
-    .muted{color:var(--muted)}
-    .right{text-align:right}
-    mark{background:var(--accent);color:#021228;padding:0 .15rem;border-radius:3px}
-    .danger{color:var(--danger)}
-    .success{color:var(--success)}
-
-    /* small animations */
-    .fade{transition:opacity .18s ease, transform .18s ease}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
-    /* tests panel */
-    .tests{background:linear-gradient(180deg,#041426, #071a2b);padding:12px;border-radius:8px}
-    .pass{color:var(--success)}.fail{color:var(--danger)}
-  </style>
+  <link rel="stylesheet" href="styles/style.css">
 </head>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <body>
-  <a href="#main" class="skip">Skip to content</a>
-  <div class="container">
-    <header>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="brand">
       <div class="logo" aria-hidden>SF</div>
       <div>
         <h1>Student Finance Tracker</h1>
-        <p class="muted">Responsive • Accessible • Regex search • localStorage</p>
+        <p class="tag">Responsive • Accessible • localStorage</p>
       </div>
-    </header>
+    </div>
 
-    <nav role="navigation" aria-label="Primary">
-      <button id="nav-dashboard" aria-current="true">Dashboard</button>
-      <button id="nav-records">Records</button>
-      <button id="nav-add">Add</button>
-      <button id="nav-settings">Settings</button>
-      <button id="nav-about">About</button>
-      <button id="nav-tests">Tests</button>
+    <nav class="nav" aria-label="Primary navigation">
+      <button id="menuToggle" class="hamburger" aria-expanded="false" aria-controls="primaryMenu">☰</button>
+      <ul id="primaryMenu" class="menu" role="menubar">
+        <li role="none"><button role="menuitem" data-target="dashboard" class="menu-btn" aria-current="true">Dashboard</button></li>
+        <li role="none"><button role="menuitem" data-target="records" class="menu-btn">Records</button></li>
+        <li role="none"><button role="menuitem" data-target="add" class="menu-btn">Add</button></li>
+        <li role="none"><button role="menuitem" data-target="settings" class="menu-btn">Settings</button></li>
+        <li role="none"><button role="menuitem" data-target="about" class="menu-btn">About</button></li>
+      </ul>
     </nav>
+  </header>
 
-    <main id="main">
-      <!-- left column (main content) -->
-      <section id="dashboard" class="card">
-        <h2>Dashboard</h2>
-        <div class="stats-grid" id="statsGrid">
-          <div class="stat card" id="statCount">Total transactions: <strong id="totalCount">0</strong></div>
-          <div class="stat card" id="statSum">Balance: <strong id="balance">0</strong></div>
-          <div class="stat card" id="statIncome">Total Income: <strong id="totalIncome">0</strong></div>
-          <div class="stat card" id="statExpense">Total Expense: <strong id="totalExpense">0</strong></div>
-          <div class="stat card" id="statTop">Top category: <strong id="topCategory">—</strong></div>
-          <div class="stat card" id="statCap">Cap: <strong id="capInfo">Not set</strong><div id="capAlert" role="status" aria-live="polite"></div></div>
+  <main id="main" tabindex="-1" class="container">
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="card">
+      <h2>Dashboard</h2>
+      <div class="stats" role="region" aria-label="Summary statistics">
+        <div class="stat"><div class="label">Total</div><div id="statTotal" class="value">0</div></div>
+        <div class="stat"><div class="label">Income</div><div id="statIncome" class="value">0.00</div></div>
+        <div class="stat"><div class="label">Expense</div><div id="statExpense" class="value">0.00</div></div>
+        <div class="stat"><div class="label">Balance</div><div id="statBalance" class="value">0.00</div></div>
+      </div>
+
+      <div class="chart-card card" aria-hidden="false">
+        <h3>Last 7 days</h3>
+        <div id="chart" class="chart" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- Records -->
+    <section id="records" class="card hidden" aria-labelledby="recordsHeading">
+      <h2 id="recordsHeading">Transactions</h2>
+
+      <div class="controls" role="region" aria-label="Search and import export">
+        <input id="searchInput" type="text" placeholder="Enter regex (e.g. coffee|tea)" aria-label="Search by regex">
+        <label><input id="flagI" type="checkbox" checked> Case-insensitive</label>
+        <button id="applySearch" class="btn secondary">Apply</button>
+        <button id="clearSearch" class="btn secondary">Clear</button>
+
+        <div class="right-actions" aria-hidden="false">
+          <button id="exportJSON" class="btn">Export</button>
+          <input id="importFile" type="file" accept="application/json" aria-label="Import transactions as JSON">
         </div>
-        <h3 class="muted">Last 7 days</h3>
-        <div class="card">
-          <div id="chart" class="chart" aria-hidden></div>
-        </div>
-      </section>
+      </div>
 
-      <section id="records" class="card" hidden>
-        <h2>Transactions</h2>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-          <input id="searchInput" type="text" placeholder="Enter regex (e.g. coffee|tea)" aria-label="Search by regex" />
-          <label class="muted" style="display:flex;align-items:center;gap:6px"><input id="flagI" type="checkbox" checked /> Case-insensitive</label>
-          <button id="searchBtn" class="btn secondary">Apply</button>
-          <button id="clearSearch" class="btn secondary">Clear</button>
-          <div style="margin-left:auto;display:flex;gap:8px">
-            <button id="exportJSON" class="btn">Export JSON</button>
-            <input id="importFile" type="file" accept="application/json" aria-label="Import JSON file" />
-          </div>
-        </div>
+      <div id="tableWrap">
+        <table id="txnTable" class="txn-table" aria-live="polite">
+          <thead>
+            <tr>
+              <th data-field="date">Date <span class="sort">↕</span></th>
+              <th data-field="description">Description <span class="sort">↕</span></th>
+              <th data-field="category">Category <span class="sort">↕</span></th>
+              <th data-field="amount">Amount <span class="sort">↕</span></th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="txnBody"></tbody>
+        </table>
 
-        <div id="tableWrapper">
-          <table id="txnTable" aria-live="polite">
-            <thead>
-              <tr>
-                <th data-field="date">Date <span class="sort">↕</span></th>
-                <th data-field="description">Description <span class="sort">↕</span></th>
-                <th data-field="category">Category <span class="sort">↕</span></th>
-                <th data-field="amount" class="right">Amount <span class="sort">↕</span></th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="txnBody"></tbody>
-          </table>
-          <div id="cardList" class="card-list" style="display:none"></div>
-        </div>
-      </section>
+        <div id="cardList" class="card-list" hidden aria-live="polite"></div>
+      </div>
+    </section>
 
-      <section id="add" class="card" hidden>
-        <h2 id="formTitle">Add Transaction</h2>
-        <form id="txnForm">
-          <div class="form-grid">
-            <div>
-              <label for="description">Description</label>
-              <input id="description" name="description" type="text" required />
-              <div id="err-desc" class="muted" aria-live="polite"></div>
-            </div>
-
-            <div>
-              <label for="amount">Amount (positive number)</label>
-              <input id="amount" name="amount" type="text" inputmode="decimal" required />
-              <div id="err-amt" class="muted" aria-live="polite"></div>
-            </div>
-
-            <div>
-              <label for="category">Category</label>
-              <select id="category" name="category">
-                <option>Food</option>
-                <option>Books</option>
-                <option>Transport</option>
-                <option>Entertainment</option>
-                <option>Fees</option>
-                <option>Other</option>
-              </select>
-              <div id="err-cat" class="muted" aria-live="polite"></div>
-            </div>
-
-            <div>
-              <label for="date">Date</label>
-              <input id="date" name="date" type="date" required />
-              <div id="err-date" class="muted" aria-live="polite"></div>
-            </div>
+    <!-- Add / Edit -->
+    <section id="add" class="card hidden" aria-labelledby="formTitle">
+      <h2 id="formTitle">Add Transaction</h2>
+      <form id="txnForm" novalidate>
+        <div class="grid-2">
+          <div class="field">
+            <label for="description">Description</label>
+            <input id="description" name="description" type="text" required>
+            <div id="err-desc" class="err" aria-live="polite"></div>
           </div>
 
-          <div style="display:flex;gap:8px;margin-top:12px">
-            <button id="saveBtn" class="btn" type="submit">Save</button>
-            <button id="cancelEdit" class="btn secondary" type="button">Cancel</button>
-          </div>
-        </form>
-      </section>
-
-      <section id="settings" class="card" hidden>
-        <h2>Settings</h2>
-        <div class="settings-grid">
-          <div>
-            <label for="baseCurrency">Base currency code</label>
-            <input id="baseCurrency" type="text" maxlength="3" value="RWF" />
+          <div class="field">
+            <label for="amount">Amount (positive)</label>
+            <input id="amount" name="amount" type="text" inputmode="decimal" required>
+            <div id="err-amt" class="err" aria-live="polite"></div>
           </div>
 
-          <div>
-            <label for="rateUSD">Rate USD (per base unit)</label>
-            <input id="rateUSD" type="number" step="0.0001" value="0.001" />
+          <div class="field">
+            <label for="category">Category</label>
+            <select id="category">
+              <option>Food</option>
+              <option>Books</option>
+              <option>Transport</option>
+              <option>Entertainment</option>
+              <option>Fees</option>
+              <option>Other</option>
+              <option>Income</option>
+            </select>
+            <div id="err-cat" class="err" aria-live="polite"></div>
           </div>
 
-          <div>
-            <label for="rateEUR">Rate EUR (per base unit)</label>
-            <input id="rateEUR" type="number" step="0.0001" value="0.0009" />
-          </div>
-
-          <div>
-            <label for="capValue">Monthly cap (numeric, optional)</label>
-            <input id="capValue" type="number" step="0.01" placeholder="leave empty for none" />
-            <div class="muted">If set, dashboard will announce remaining/overage.</div>
-          </div>
-
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button id="saveSettings" class="btn">Save settings</button>
-            <button id="resetData" class="btn secondary">Reset data</button>
+          <div class="field">
+            <label for="date">Date</label>
+            <input id="date" name="date" type="date" required>
+            <div id="err-date" class="err" aria-live="polite"></div>
           </div>
         </div>
-      </section>
 
-      <section id="about" class="card" hidden>
-        <h2>About</h2>
-        <p>This Student Finance Tracker helps students record expenses and income with regex-powered search and basic stats. Built for the course assignment.</p>
-        <p>Contact: <a href="https://github.com/your-username" target="_blank" rel="noopener">GitHub</a> • <a href="mailto:you@example.com">you@example.com</a></p>
-      </section>
-
-      <section id="tests" class="card" hidden>
-        <h2>Tests</h2>
-        <div class="tests">
-          <button id="runTests" class="btn">Run Regex & Validator Tests</button>
-          <div id="testResults" style="margin-top:8px"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn">Save</button>
+          <button type="button" id="cancelEdit" class="btn secondary">Cancel</button>
         </div>
-      </section>
+      </form>
+    </section>
 
-    </main>
+    <!-- Settings -->
+    <section id="settings" class="card hidden" aria-labelledby="settingsTitle">
+      <h2 id="settingsTitle">Settings</h2>
 
-    <footer style="margin-top:18px" class="muted">Made for assignment • Mobile-first • Accessible</footer>
+      <div class="field">
+        <label for="themeToggle">Theme</label>
+        <select id="themeToggle"><option value="dark">Dark</option><option value="light">Light</option></select>
+      </div>
+
+      <div class="field">
+        <label for="baseCurrency">Base currency code</label>
+        <input id="baseCurrency" maxlength="3" value="RWF">
+      </div>
+
+      <div class="grid-2">
+        <div class="field"><label for="rateUSD">Rate USD (per base)</label><input id="rateUSD" type="number" step="0.0001" value="0.001"></div>
+        <div class="field"><label for="rateEUR">Rate EUR (per base)</label><input id="rateEUR" type="number" step="0.0001" value="0.0009"></div>
+      </div>
+
+      <div class="field">
+        <label for="capInput">Monthly cap (optional)</label>
+        <input id="capInput" type="number" step="0.01" placeholder="leave empty" />
+      </div>
+
+      <div class="form-actions">
+        <button id="saveSettings" class="btn">Save settings</button>
+        <button id="resetData" class="btn secondary">Reset to seed</button>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="card hidden" aria-labelledby="aboutTitle">
+      <h2 id="aboutTitle">About</h2>
+      <p>This Student Finance Tracker helps students record expenses and income with regex-powered search and localStorage persistence.</p>
+      <p>Contact: <a href="https://github.com/your-username" target="_blank" rel="noopener">GitHub</a> • <a href="mailto:you@example.com">you@example.com</a></p>
+    </section>
 
     <div id="status" class="sr-only" role="status" aria-live="polite"></div>
-  </div>
+  </main>
 
+  <footer class="footer">© 2025 Student Finance Tracker</footer>
 
-
-
-
-
-
-
-
-
-
-
-
-  <script type="module">
-  // ---------- app.js (single-module implementation) ----------
-  // Seed data array (10+ records)
-  const SEED = [
-    {id:'txn_0001',description:'Lunch at cafeteria',amount:12.50,category:'Food',date:'2025-09-25',createdAt:'2025-09-25T12:30:00.000Z',updatedAt:'2025-09-25T12:30:00.000Z'},
-    {id:'txn_0002',description:'Chemistry textbook',amount:89.99,category:'Books',date:'2025-09-23',createdAt:'2025-09-23T09:00:00.000Z',updatedAt:'2025-09-23T09:00:00.000Z'},
-    {id:'txn_0003',description:'Bus pass monthly',amount:45.00,category:'Transport',date:'2025-09-20',createdAt:'2025-09-20T08:00:00.000Z',updatedAt:'2025-09-20T08:00:00.000Z'},
-    {id:'txn_0004',description:'Coffee with friends',amount:8.75,category:'Entertainment',date:'2025-09-28',createdAt:'2025-09-28T15:00:00.000Z',updatedAt:'2025-09-28T15:00:00.000Z'},
-    {id:'txn_0005',description:'Library fine',amount:2.00,category:'Other',date:'2025-08-05',createdAt:'2025-08-05T10:00:00.000Z',updatedAt:'2025-08-05T10:00:00.000Z'},
-    {id:'txn_0006',description:'Laptop charger',amount:24.99,category:'Fees',date:'2025-07-15',createdAt:'2025-07-15T11:30:00.000Z',updatedAt:'2025-07-15T11:30:00.000Z'},
-    {id:'txn_0007',description:'Snack--midnight study',amount:3.50,category:'Food',date:'2025-10-01',createdAt:'2025-10-01T00:30:00.000Z',updatedAt:'2025-10-01T00:30:00.000Z'},
-    {id:'txn_0008',description:'Exam fees payment',amount:120.00,category:'Fees',date:'2025-09-01',createdAt:'2025-09-01T09:30:00.000Z',updatedAt:'2025-09-01T09:30:00.000Z'},
-    {id:'txn_0009',description:'Beverage coffee coffee',amount:6.00,category:'Entertainment',date:'2025-09-29',createdAt:'2025-09-29T08:45:00.000Z',updatedAt:'2025-09-29T08:45:00.000Z'},
-    {id:'txn_0010',description:'Used book purchase',amount:15.00,category:'Books',date:'2025-08-30',createdAt:'2025-08-30T14:00:00.000Z',updatedAt:'2025-08-30T14:00:00.000Z'},
-    {id:'txn_0011',description:'Concert ticket',amount:50.00,category:'Entertainment',date:'2025-07-04',createdAt:'2025-07-04T18:00:00.000Z',updatedAt:'2025-07-04T18:00:00.000Z'}
-  ];
-
-  // Storage helper
-  const KEY = 'sf:records:v1';
-  function load(){
-    try{
-      const raw = localStorage.getItem(KEY);
-      if(!raw) return null;
-      const parsed = JSON.parse(raw);
-      if(Array.isArray(parsed)) return parsed;
-      return null;
-    }catch(e){console.error('load failed',e); return null}
-  }
-  function save(arr){
-    localStorage.setItem(KEY, JSON.stringify(arr));
-  }
-
-  // Validators
-  const patterns = {
-    description: /^\S(?:.*\S)?$/,
-    amount: /^(0|[1-9]\d*)(\.\d{1,2})?$/,
-    date: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-    category: /^[A-Za-z]+(?:[ -][A-Za-z]+)*$/,
-    duplicateWords: /\b(\w+)\s+\1\b/i
-  };
-
-  function validateRecord(rec){
-    const errors = {};
-    if(!patterns.description.test(rec.description)) errors.description = 'Description must not have leading/trailing spaces.';
-    if(!patterns.amount.test(String(rec.amount))) errors.amount = 'Amount must be positive with up to 2 decimals.';
-    if(!patterns.date.test(rec.date)) errors.date = 'Date must be YYYY-MM-DD.';
-    if(!patterns.category.test(rec.category)) errors.category = 'Category uses letters, spaces, hyphens only.';
-    if(patterns.duplicateWords.test(rec.description)) errors.duplicateWords = 'Duplicate adjacent words detected.';
-    return {valid: Object.keys(errors).length===0, errors};
-  }
-
-  // Safe regex compile & highlight
-  function compileRegex(input, flags='i'){
-    if(!input) return null;
-    try{
-      // ensure global for highlighting
-      if(!flags.includes('g')) flags = flags + 'g';
-      return new RegExp(input, flags);
-    }catch(e){
-      return null;
-    }
-  }
-  function escapeHtml(s){return s.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
-  function highlight(text,re){
-    if(!re) return escapeHtml(text);
-    // make non-global copy for finding all matches
-    const flags = re.flags.includes('g')?re.flags:re.flags + 'g';
-    const g = new RegExp(re.source, flags);
-    let out = '';
-    let last = 0; let m;
-    while((m = g.exec(text)) !== null){
-      out += escapeHtml(text.slice(last,m.index));
-      out += `<mark>${escapeHtml(m[0])}</mark>`;
-      last = m.index + m[0].length;
-      if(!g.global) break;
-      // prevent infinite loop on zero-length matches
-      if(m.index === g.lastIndex) g.lastIndex++;
-    }
-    out += escapeHtml(text.slice(last));
-    return out;
-  }
-
-  // State
-  let records = load();
-  if(!records){ records = SEED.slice(); save(records); }
-  let currentSort = {field:'date',dir:'desc'};
-  let currentRegex = null; // RegExp or null
-
-  // DOM refs
-  const nav = {dashboard:document.getElementById('nav-dashboard'), records:document.getElementById('nav-records'), add:document.getElementById('nav-add'), settings:document.getElementById('nav-settings'), about:document.getElementById('nav-about'), tests:document.getElementById('nav-tests')};
-  const sections = {dashboard:document.getElementById('dashboard'), records:document.getElementById('records'), add:document.getElementById('add'), settings:document.getElementById('settings'), about:document.getElementById('about'), tests:document.getElementById('tests')};
-  const txnBody = document.getElementById('txnBody');
-  const cardList = document.getElementById('cardList');
-  const searchInput = document.getElementById('searchInput');
-  const flagI = document.getElementById('flagI');
-  const totalCount = document.getElementById('totalCount');
-  const totalIncome = document.getElementById('totalIncome');
-  const totalExpense = document.getElementById('totalExpense');
-  const balanceEl = document.getElementById('balance');
-  const topCategory = document.getElementById('topCategory');
-  const chart = document.getElementById('chart');
-  const capInfo = document.getElementById('capInfo');
-  const capAlert = document.getElementById('capAlert');
-  const searchBtn = document.getElementById('searchBtn');
-  const clearSearch = document.getElementById('clearSearch');
-  const exportJSON = document.getElementById('exportJSON');
-  const importFile = document.getElementById('importFile');
-
-  // form refs
-  const txnForm = document.getElementById('txnForm');
-  const descInput = document.getElementById('description');
-  const amtInput = document.getElementById('amount');
-  const catInput = document.getElementById('category');
-  const dateInput = document.getElementById('date');
-  const saveBtn = document.getElementById('saveBtn');
-  const cancelEdit = document.getElementById('cancelEdit');
-  let editingId = null;
-
-  // settings
-  const baseCurrency = document.getElementById('baseCurrency');
-  const rateUSD = document.getElementById('rateUSD');
-  const rateEUR = document.getElementById('rateEUR');
-  const capValue = document.getElementById('capValue');
-  const saveSettings = document.getElementById('saveSettings');
-  const resetData = document.getElementById('resetData');
-
-  // tests
-  const runTests = document.getElementById('runTests');
-  const testResults = document.getElementById('testResults');
-
-  // accessibility status
-  const status = document.getElementById('status');
-
-  // navigation
-  Object.keys(nav).forEach(k=>nav[k].addEventListener('click',()=>{ showSection(k); }));
-  function showSection(key){
-    // set buttons
-    Object.keys(nav).forEach(k=>nav[k].setAttribute('aria-current', k===key ? 'true':'false'));
-    Object.keys(sections).forEach(k=>{ sections[k].hidden = k!==key; });
-    document.getElementById('main').focus?.();
-  }
-
-  // render
-  function sortRecords(arr){
-    const a = arr.slice();
-    const fld = currentSort.field;
-    const dir = currentSort.dir === 'asc' ? 1:-1;
-    a.sort((x,y)=>{
-      if(fld==='date') return dir * (x.date < y.date ? -1 : x.date > y.date ? 1 : 0);
-      if(fld==='description') return dir * x.description.localeCompare(y.description);
-      if(fld==='amount') return dir * (x.amount - y.amount);
-      return 0;
-    });
-    return a;
-  }
-
-  function applySearch(arr){
-    if(!currentRegex) return arr.slice();
-    return arr.filter(r=> currentRegex.test(r.description) || currentRegex.test(r.category) || currentRegex.test(String(r.amount)) || currentRegex.test(r.date));
-  }
-
-  function render(){
-    let out = '';
-    // sorting + searching
-    let list = sortRecords(records);
-    list = applySearch(list);
-    // table rows
-    txnBody.innerHTML = '';
-    list.forEach(r=>{
-      const descHtml = highlight(r.description, currentRegex);
-      const row = document.createElement('tr'); row.tabIndex = 0; row.setAttribute('data-id',r.id);
-      row.innerHTML = `<td>${r.date}</td><td>${descHtml}</td><td>${escapeHtml(r.category)}</td><td class="right">${Number(r.amount).toFixed(2)}</td><td><button class="edit">Edit</button> <button class="del">Delete</button></td>`;
-      txnBody.appendChild(row);
-    });
-    // mobile cards
-    cardList.innerHTML='';
-    list.forEach(r=>{
-      const card = document.createElement('div'); card.className='txn-card';
-      card.innerHTML = `<div class="txn-left"><div><strong>${escapeHtml(r.description)}</strong></div><div class="txn-meta">${r.date} • ${escapeHtml(r.category)}</div></div><div class="txn-right right"><div>${Number(r.amount).toFixed(2)}</div><div style="margin-top:8px"><button class="edit">Edit</button> <button class="del">Delete</button></div></div>`;
-      card.dataset.id = r.id;
-      cardList.appendChild(card);
-    });
-
-    // attach row handlers
-    document.querySelectorAll('.edit').forEach(b=>b.addEventListener('click',onEditClicked));
-    document.querySelectorAll('.del').forEach(b=>b.addEventListener('click',onDeleteClicked));
-
-    updateStats(list);
-  }
-
-  function updateStats(list){
-    totalCount.textContent = list.length;
-    const income = list.filter(r=>r.amount>0).reduce((s,r)=>s+r.amount,0);
-    const expense = list.filter(r=>r.amount<0).reduce((s,r)=>s+r.amount,0);
-    // In our model expenses are positive numbers; we'll consider them expenses by category name? We'll derive totalExpense as sum of amounts where category contributes? For simplicity: treat categories as expenses unless category is 'Income'
-    const totalIncomeVal = list.filter(r=>r.category.toLowerCase()==='income').reduce((s,r)=>s+r.amount,0);
-    const totalExpenseVal = list.filter(r=>r.category.toLowerCase()!=='income').reduce((s,r)=>s+r.amount,0);
-    totalIncome.textContent = totalIncomeVal.toFixed(2);
-    totalExpense.textContent = totalExpenseVal.toFixed(2);
-    balanceEl.textContent = (totalIncomeVal - totalExpenseVal).toFixed(2);
-
-    // top category by spend
-    const byCat = {};
-    list.forEach(r=>{ byCat[r.category] = (byCat[r.category]||0) + r.amount; });
-    const top = Object.keys(byCat).sort((a,b)=>byCat[b]-byCat[a])[0] || '—';
-    topCategory.textContent = top;
-
-    // chart last 7 days (simple)
-    const days = Array.from({length:7},(_,i)=>{
-      const d = new Date(); d.setDate(d.getDate() - (6-i));
-      const key = d.toISOString().slice(0,10);
-      const sum = list.filter(r=>r.date===key).reduce((s,r)=>s + r.amount,0);
-      return {key,sum};
-    });
-    const max = Math.max(1, ...days.map(d=>d.sum));
-    chart.innerHTML = days.map(d=>`<div class="bar" title="${d.key}: ${d.sum.toFixed(2)}" style="background:linear-gradient(180deg,#60a5fa,#7c3aed);height:${Math.round((d.sum/max)*100)}%"></div>`).join('');
-
-    // cap announcement
-    const cap = Number(capValue.value) || null;
-    if(cap){
-      capInfo.textContent = `${cap.toFixed(2)} ${baseCurrency.value || 'BASE'}`;
-      const monthKey = (new Date()).toISOString().slice(0,7);
-      const monthSum = list.filter(r=>r.date.startsWith(monthKey)).reduce((s,r)=>s+r.amount,0);
-      const remaining = cap - monthSum;
-      if(remaining < 0){
-        capAlert.setAttribute('aria-live','assertive'); capAlert.textContent = `Cap exceeded by ${Math.abs(remaining).toFixed(2)}`;
-      } else {
-        capAlert.setAttribute('aria-live','polite'); capAlert.textContent = `Remaining: ${remaining.toFixed(2)}`;
-      }
-    } else { capInfo.textContent = 'Not set'; capAlert.textContent = ''; }
-  }
-
-  // events
-  document.querySelectorAll('th[data-field]').forEach(h=>h.addEventListener('click',()=>{
-    const fld = h.dataset.field; if(currentSort.field===fld) currentSort.dir = currentSort.dir==='asc' ? 'desc' : 'asc'; else {currentSort.field=fld; currentSort.dir='asc'}; render();
-  }));
-
-  searchBtn.addEventListener('click',()=>{
-    const pat = searchInput.value.trim(); const flags = flagI.checked ? 'ig':'g';
-    const r = compileRegex(pat, flags);
-    if(pat && !r){ alert('Regex pattern invalid'); status.textContent='Invalid regex pattern'; return; }
-    currentRegex = r; render(); status.textContent = `Search applied`;
-  });
-
-  clearSearch.addEventListener('click',()=>{ searchInput.value=''; currentRegex=null; render(); status.textContent='Search cleared'; });
-
-  exportJSON.addEventListener('click',()=>{
-    const dataStr = JSON.stringify(records, null, 2);
-    const blob = new Blob([dataStr], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a=document.createElement('a'); a.href=url; a.download='finance-export.json'; a.click(); URL.revokeObjectURL(url);
-    status.textContent='Exported JSON';
-  });
-
-  importFile.addEventListener('change', async(e)=>{
-    const f = e.target.files[0]; if(!f) return; try{
-      const text = await f.text(); const data = JSON.parse(text);
-      // validate
-      if(!Array.isArray(data)){ alert('JSON must be an array of records'); return; }
-      const invalid = data.map((r,i)=>({i,ok:validateRecord(r).valid,errors:validateRecord(r).errors})).filter(x=>!x.ok);
-      if(invalid.length){
-        alert('Import failed: some records invalid. Open console for details.'); console.error('invalid records',invalid); return;
-      }
-      // confirm replace or merge
-      if(confirm('Replace existing data? OK to replace — Cancel to merge with existing.')){
-        records = data; save(records); render(); status.textContent='Imported and replaced data';
-      } else { records = records.concat(data); save(records); render(); status.textContent='Imported and merged data'; }
-    }catch(err){alert('Failed to import: '+err.message)} finally { importFile.value=''; }
-  });
-
-  // add/edit form
-  txnForm.addEventListener('submit',(ev)=>{
-    ev.preventDefault();
-    const rec = { description: descInput.value.trim().replace(/\s+/g,' '), amount: Number(amtInput.value), category: catInput.value.trim(), date: dateInput.value, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
-    const chk = validateRecord(rec);
-    document.getElementById('err-desc').textContent = chk.errors.description || '';
-    document.getElementById('err-amt').textContent = chk.errors.amount || '';
-    document.getElementById('err-cat').textContent = chk.errors.category || '';
-    document.getElementById('err-date').textContent = chk.errors.date || '';
-    if(!chk.valid){ status.textContent='Validation failed'; return; }
-    if(editingId){ // update
-      const idx = records.findIndex(r=>r.id===editingId);
-      if(idx>=0){ rec.id = editingId; rec.createdAt = records[idx].createdAt; rec.updatedAt = new Date().toISOString(); records[idx] = rec; save(records); status.textContent='Record updated'; }
-      editingId = null; document.getElementById('formTitle').textContent='Add Transaction';
-    } else {
-      rec.id = 'txn_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,6);
-      records.push(rec); save(records); status.textContent='Record added';
-    }
-    txnForm.reset(); render(); showSection('records');
-  });
-
-  cancelEdit.addEventListener('click',()=>{ editingId=null; txnForm.reset(); document.getElementById('formTitle').textContent='Add Transaction'; showSection('records'); });
-
-  function onEditClicked(e){
-    const id = e.target.closest('[data-id]')?.dataset.id; if(!id) return;
-    const rec = records.find(r=>r.id===id); if(!rec) return;
-    editingId = id; descInput.value = rec.description; amtInput.value = rec.amount; catInput.value = rec.category; dateInput.value = rec.date; document.getElementById('formTitle').textContent='Edit Transaction'; showSection('add');
-  }
-  function onDeleteClicked(e){
-    const id = e.target.closest('[data-id]')?.dataset.id; if(!id) return;
-    if(confirm('Delete this record?')){
-      records = records.filter(r=>r.id!==id); save(records); render(); status.textContent='Record deleted';
-    }
-  }
-
-  // settings
-  saveSettings.addEventListener('click',()=>{ localStorage.setItem('sf:settings', JSON.stringify({base:baseCurrency.value,usd:Number(rateUSD.value),eur:Number(rateEUR.value),cap:capValue.value})); status.textContent='Settings saved'; render(); });
-  resetData.addEventListener('click',()=>{ if(confirm('Reset data to seed?')){ records = SEED.slice(); save(records); render(); status.textContent='Data reset to seed'; } });
-
-  // tests
-  runTests.addEventListener('click',()=>{
-    const results=[];
-    // desc pattern
-    results.push(testPattern('description',' Valid ', patterns.description, 'Lunch'));
-    results.push(testPattern('description',' Leading space', patterns.description, ' Lunch'));
-    results.push(testPattern('amount','12.50', patterns.amount, '12.50'));
-    results.push(testPattern('amount','12.345 invalid', patterns.amount, '12.345'));
-    results.push(testPattern('date','valid', patterns.date, '2025-10-16'));
-    results.push(testPattern('date','bad month', patterns.date, '2025-13-01'));
-    results.push(testPattern('category','valid', patterns.category, 'Food'));
-    results.push(testPattern('dupwords','dup', patterns.duplicateWords, 'coffee coffee'));
-    testResults.innerHTML = results.map(r=>`<div>${r.name}: <span class="${r.ok? 'pass':'fail'}">${r.ok? 'PASS':'FAIL'}</span> ${r.msg? '- '+r.msg:''}</div>`).join('');
-  });
-  function testPattern(name,desc,pat,input){ const ok = pat.test(input); return {name:`${name} (${desc})`, ok, msg: `input: ${input}`}; }
-
-  // keyboard shortcuts (light): n -> new, / -> focus search
-  document.addEventListener('keydown', (e)=>{
-    if(e.key==='n' && document.activeElement.tagName.toLowerCase()!== 'input'){ e.preventDefault(); showSection('add'); descInput.focus(); }
-    if(e.key==='/' && document.activeElement.tagName.toLowerCase()!== 'input'){ e.preventDefault(); showSection('records'); searchInput.focus(); }
-    if(e.key==='Escape'){ // cancel edit
-      if(!sections.add.hidden){ cancelEdit.click(); }
-    }
-  });
-
-  // responsive toggle: switch table/cards based on width
-  function updateLayout(){
-    if(window.innerWidth < 720){ document.getElementById('txnTable').style.display='none'; cardList.style.display='block'; }
-    else { document.getElementById('txnTable').style.display='table'; cardList.style.display='none'; }
-  }
-  window.addEventListener('resize', updateLayout);
-
-  // initial render
-  updateLayout(); render(); showSection('dashboard');
-
-  </script>
+  <script type="module" src="scripts/app.js"></script>
 </body>
 </html>
