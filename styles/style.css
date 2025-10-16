@@ -43,7 +43,7 @@ html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system,'Sego
 
 /* responsive */
 .menu.show {
-  animation: dropdownFade 0.2s ease;
+  animation: dropdownFade 0.5s ease;
 }
 
 @keyframes dropdownFade {
@@ -133,25 +133,37 @@ select option {
 
 
 /* When menu opens (on small screens) */
-.menu.show {
+.menu {
   display: flex;
-  flex-direction: column;       /* Stack items vertically */
-  position: absolute;
-  top: 70px;                    /* Slightly below topbar */
-  right: 12px;                  /* Align to the right */
-  background: var(--panel);
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  z-index: 999;
-  gap: 8px;                     /* Add spacing between buttons */
-  width: 180px;                 /* Optional: give it some width */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 6px;
+  flex-direction: row; /* horizontal on desktop */
 }
 
-/* Make sure links fit well in dropdown */
-.menu.show .menu-btn {
-  display: block;
-  width: 100%;
-  text-align: left;
-  border: none;
+/* Hidden by default on small screens */
+@media (max-width: 720px){
+  .menu {
+    display: none;      /* hide initially */
+    flex-direction: column; /* vertical when shown */
+    position: absolute;
+    top: 70px;
+    right: 12px;
+    background: var(--panel);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    width: 180px;
+    gap: 8px;
+    z-index: 999;
+  }
+  
+  .menu.show {
+    display: flex;      /* show dropdown */
+  }
+  
+  .hamburger {
+    display: block;
+  }
 }
