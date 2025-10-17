@@ -1,9 +1,10 @@
 # Student_finance_tracker-_assignment
 
 This is a web app used to track and monitor how students spend money during their academic journey.
-Over view
 
-this repository includes five files. index.html, script/app.jc, style/style.css, and YouTube_video_link.txt
+# Overview
+
+This repository includes five files. index.html, script/app.jc, style/style.css, and YouTube_video_link.txt
 
 **Live Demo:** https://erichategekimana.github.io/Student_finance_tracker-_assignment/
 **How to use it demo video:** https://youtu.be/fbRpBJTMVuU
