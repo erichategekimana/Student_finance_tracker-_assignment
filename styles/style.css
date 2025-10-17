@@ -1,3 +1,4 @@
+/* Defining reusable variables for color */
 :root{
   --bg:#0b1220; 
   --panel:#071826; 
@@ -10,7 +11,7 @@
   --radius:12px;
 }
 
-
+/* Styling every single content that we created in html file(one by one) */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system,'Segoe UI',Roboto,Arial;color:var(--text);background:linear-gradient(180deg,#041226 0%, #071428 100%)}
 .skip{position:absolute;left:10px;top:10px;background:#fff;color:#072034;padding:8px 12px;border-radius:8px;transform:translateY(-130%);transition:transform .18s;z-index:999}
@@ -51,9 +52,14 @@ html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system,'Sego
 .footer{padding:12px;text-align:center;color:var(--muted)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* responsive */
+
+
+
+
+
+/* This bolck of code helps when theme changed to dark, buttons will also change their color to march the theme(eg: hamburger button) */
 .menu.show {
-  animation: dropdownFade 0.5s ease;
+  animation: dropdownFade 0.5s ease; /* Apply the dropdownFade animation */
 }
 
 @keyframes dropdownFade {
@@ -72,25 +78,7 @@ html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system,'Sego
   .txn-table{display:none}
   .card-list{display:block}
 }
-
-/* light theme overrides */
-:root.light{
-  --bg:#f8fafc; --panel:#ffffff; --muted:#475569; --accent:#2563eb; --text:#0b1220; --card:#ffffff;
-}
-:root.light body{background:var(--bg)}
-
-/* small focus */
-button:focus, input:focus, select:focus{outline:3px solid rgba(96,165,250,0.18);border-radius:8px}
-
-
-
-
-
-/* =====================================
-   Fix invisible items in Dark Mode
-   ===================================== */
-
-/* 1. Hamburger icon lines */
+                         /* 1. Fix invisibility (Hamburger icon lines) */
 .hamburger span {
   display: block;
   width: 22px;
@@ -100,7 +88,7 @@ button:focus, input:focus, select:focus{outline:3px solid rgba(96,165,250,0.18);
   transition: background 0.3s;
 }
 
-/* 2. Make sure dropdowns & inputs stay visible */
+                         /* 2. Make sure dropdowns & inputs stay visible even when theme changed */
 .field select,
 .field input,
 .controls input[type=text] {
@@ -115,13 +103,13 @@ button:focus, input:focus, select:focus{outline:3px solid rgba(96,165,250,0.18);
   border: 1px solid rgba(0,0,0,0.1);
 }
 
-/* 3. Category dropdown options */
+                          /* 3. Category dropdown options */
 select option {
   background-color: var(--panel);
   color: var(--text);
 }
 
-/* 4. Buttons — ensure readable text in both modes */
+                           /* 4. Buttons — ensure readable text in both modes */
 .btn {
   background-color: var(--accent);
   color: #fff;
@@ -135,20 +123,49 @@ select option {
   border: 1px solid rgba(0,0,0,0.1);
 }
 
-/* 5. Smooth transitions between themes */
+                           /* 5. Smooth transitions between themes */
 * {
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
+/* End of the invisibility fixes lines block of code */
 
 
+
+
+
+
+/* light theme overrides */
+:root.light{
+  --bg:#f8fafc;
+   --panel:#ffffff;
+    --muted:#475569;
+     --accent:#2563eb;
+      --text:#0b1220;
+       --card:#ffffff;
+}
+:root.light body{background:var(--bg)}
+
+/* small focus */
+button:focus, input:focus, select:focus{outline:3px solid rgba(96,165,250,0.18);border-radius:8px}
+
+
+
+
+
+
+
+
+
+
+/* Styling dropdown for small screens like mobile or tables */
 /* When menu opens (on small screens) */
 .menu.show {
   display: flex;
-  flex-direction: column;       /* Stack items vertically */
+  flex-direction: column;       /* Set vertically dropdown */
   position: absolute;
   top: 70px;                    /* Slightly below topbar */
-  right: 12px;                  /* Align to the right */
+  right: 12px;                  /* Align it to the top-right cornel*/
   background: var(--panel);
   padding: 10px;
   border-radius: 10px;
@@ -164,4 +181,23 @@ select option {
   width: 100%;
   text-align: left;
   border: none;
+}
+
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 6px;
+  height: 150px;
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 10px;
+}
+
+.bar {
+  flex: 1;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: height 0.3s ease;
 }

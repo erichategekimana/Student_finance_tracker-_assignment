@@ -28,7 +28,7 @@ menuToggle.addEventListener('click', () => {
 });
 
 
-// validators
+// variable holds regex validators
 const patterns = {
   description: /^\S(?:.*\S)?$/,
   amount: /^(0|[1-9]\d*)(\.\d{1,2})?$/,
@@ -37,6 +37,9 @@ const patterns = {
   duplicateWords: /\b(\w+)\s+\1\b/i
 };
 
+
+
+// Functions to load/save data within browser localStorage
 function loadRecords(){
   try{
     const raw = localStorage.getItem(KEY);
@@ -134,7 +137,7 @@ const els = {
   status: document.getElementById('status')
 };
 
-// navigation
+// go through menu toggles
 els.menuToggle.addEventListener('click', () => {
   const expanded = els.menuToggle.getAttribute('aria-expanded') === 'true';
   els.menuToggle.setAttribute('aria-expanded', String(!expanded));
@@ -159,7 +162,11 @@ function showSection(name){
   document.getElementById('main').focus();
 }
 
-// sorting & search
+
+
+
+
+// this function helps in sorting & search
 function sortRecords(arr){
   const a = arr.slice();
   const fld = currentSort.field;
@@ -180,6 +187,10 @@ function applySearch(arr){
 function render() {
   const list = applySearch(sortRecords(records));
   const isMobile = window.innerWidth <= 768;
+
+
+
+
 
   // Clear previous elements before rendering
   els.txnBody.innerHTML = '';
@@ -230,6 +241,9 @@ function updateStats(list){
   els.statExpense.textContent = expense.toFixed(2);
   els.statBalance.textContent = (income - expense).toFixed(2);
 
+
+
+
   // last 7 days chart
   const days = Array.from({length:7},(_,i) => {
     const d = new Date();
@@ -241,6 +255,8 @@ function updateStats(list){
   const max = Math.max(1, ...days.map(d => d.sum));
   els.chart.innerHTML = days.map(d => `<div class="bar" title="${d.key}: ${d.sum.toFixed(2)}" style="height:${Math.round((d.sum/max)*100)}%"></div>`).join('');
 
+
+  
   // cap
   const cap = Number(els.capInput.value) || null;
   if(cap){
