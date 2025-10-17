@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- Make our web app responsive-->
   <title>Student Finance Tracker</title>
-  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/style.css">    <!-- Link to our css file-->
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -18,6 +18,8 @@
       </div>
     </div>
 
+
+    <!-- This block of code is for Navigation options -->
     <nav class="nav" aria-label="Primary navigation">
       <button id="menuToggle" class="hamburger" aria-expanded="false" aria-controls="primaryMenu"><span></span>
   <span></span>
@@ -34,7 +36,7 @@
 
   <main id="main" tabindex="-1" class="container">
 
-    <!-- Dashboard -->
+    <!-- This block of code is for Dashboard (One of navigation option) -->
     <section id="dashboard" class="card">
       <h2>Dashboard</h2>
       <div class="stats" role="region" aria-label="Summary statistics">
@@ -50,7 +52,7 @@
       </div>
     </section>
 
-    <!-- Records -->
+    <!-- This block of code is for Records (one of navigation option) -->
     <section id="records" class="card hidden" aria-labelledby="recordsHeading">
       <h2 id="recordsHeading">Transactions</h2>
 
@@ -84,7 +86,7 @@
       </div>
     </section>
 
-    <!-- Add / Edit -->
+    <!-- This block of code is for Add / Edit -->
     <section id="add" class="card hidden" aria-labelledby="formTitle">
       <h2 id="formTitle">Add Transaction</h2>
       <form id="txnForm" novalidate>
@@ -129,7 +131,7 @@
       </form>
     </section>
 
-    <!-- Settings -->
+    <!-- Settings (Navigation option)-->
     <section id="settings" class="card hidden" aria-labelledby="settingsTitle">
       <h2 id="settingsTitle">Settings</h2>
 
@@ -154,12 +156,12 @@
       </div>
 
       <div class="form-actions">
-        <button id="saveSettings" class="btn">Save settings</button>
-        <button id="resetData" class="btn secondary">Reset to seed</button>
+        <button id="saveSettings" class="btn">Save</button>
+        <button id="resetData" class="btn secondary">Reset to default</button>
       </div>
     </section>
 
-    <!-- About -->
+    <!-- About us (navigation bar) -->
     <section id="about" class="card hidden" aria-labelledby="aboutTitle">
       <h2 id="aboutTitle">About</h2>
       <p>This Student Finance Tracker helps students record expenses and income with regex-powered search and localStorage persistence.</p>
@@ -169,8 +171,9 @@
     <div id="status" class="sr-only" role="status" aria-live="polite"></div>
   </main>
 
-  <footer class="footer">© 2025 Student Finance Tracker</footer>
+  <footer class="footer">2025 Student Finance Tracker</footer>
+  <footer class="footer">©copyright reselved</footer>
 
-  <script type="module" src="scripts/app.js"></script>
+  <script type="module" src="scripts/app.js"></script> <!-- Import our JS file-->
 </body>
 </html>
