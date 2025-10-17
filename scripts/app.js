@@ -455,7 +455,7 @@ document.querySelectorAll('th[data-field]').forEach(h => h.addEventListener('cli
   render();
 }));
 
-// init
+// initialization and first render of app
 settings = Object.assign(settings, loadSettings() || {});
 applyTheme();
 els.themeToggle.value = settings.theme || 'dark';

@@ -48,6 +48,13 @@ About: Project description and contact links.
 
 All data is saved in the browser’s localStorage, so it persists across sessions.
 
+**Keyboard shortcuts**
+--------------------
+
+Press “n” = Add a new record instantly
+Press “/” = Quickly start searching your records
+Press “Esc” = Cancel adding or editing a record.
+
 
 ## File Structure
 student-finance-tracker/
